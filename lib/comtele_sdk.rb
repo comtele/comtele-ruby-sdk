@@ -202,4 +202,46 @@ module ComteleSdk
             return JSON.parse(response)    
         end 
     end
+
+    class BlacklistService
+        def initialize(api_key)
+            @api_key = api_key
+            @base_address = 'https://sms.comtele.com.br/api/v2' 
+            @headers = {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',            
+                'auth-key': @api_key
+            }   
+        end
+
+        def get_blacklist()
+            url = @base_address + '/blacklist'  
+            response = RestClient.get(url, @headers)
+            
+            return JSON.parse(response)  
+        end
+
+        def get_by_phone_number(phone_number)
+            url = @base_address + '/blacklist?id=' + phone_number   
+            response = RestClient.get(url, @headers)
+            
+            return JSON.parse(response) 
+        end
+
+        def insert(phone_number)
+            url = @base_address + '/blacklist'   
+            
+            payload = JSON.generate({ 'phoneNumber': phone_number })    
+            response = RestClient.post(url, payload, @headers)
+    
+            return JSON.parse(response)
+        end 
+
+        def remove(phone_number)
+            url = @base_address + '/blacklist?id=' + phone_number   
+            response = RestClient.delete(url, {}, @headers)
+            
+            return JSON.parse(response) 
+        end
+    end
 end
