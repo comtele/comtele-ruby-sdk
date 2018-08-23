@@ -244,4 +244,103 @@ module ComteleSdk
             return JSON.parse(response) 
         end
     end
+
+    class ContactService
+        def initialize(api_key)
+            @api_key = api_key
+            @base_address = 'https://sms.comtele.com.br/api/v2' 
+            @headers = {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',            
+                'auth-key': @api_key
+            }   
+        end
+
+        def create_group(group_name, group_description)
+            url = @base_address + 'contactgroup'
+
+            payload = JSON.generate({'name': group_name, 'description', group_description})
+            response = RestClient.post(url, payload, @headers)
+
+            return JSON.parse(response)
+        end
+
+        def remove_group(group_name)
+            url = @base_address + 'contactgroup?id=' + group_name
+            response = RestClient.delete(url, {}, @headers)
+
+            return JSON.parse(response)
+        end
+
+        def get_all_groups()
+
+            url = @base_address + 'contactgroup'
+            response = RestClient.get(url, @headers)
+
+            return JSON.parse(response)
+        end
+
+        def get_group_by_name(group_name)
+
+            url = @base_address + 'contactgroup?id=' + group_name
+            response = RestClient.get(url, @headers)
+
+            return JSON.parse(response)
+        end
+
+        def add_contact_to_group(group_name, contact_phone, contact_name)
+
+            url = @base_address + 'contactgroup'
+            payload = JSON.generate({'groupName': group_name, 'contactPhone': contact_phone, 'contactName': contact_name, 'action': 'add_number'})
+
+            response = RestClient.put(url, payload, @headers)
+            return JSON.parse(response)
+        end
+
+        def remove_contact_from_group(group_name, contact_phone)
+            url = @base_address + 'contactgroup'
+            payload = JSON.generate({'groupName': group_name, 'contactPhone': contact_phone, 'action': 'remove_number'})
+
+            response = RestClient.put(url, payload, @headers)
+            return JSON.parse(response)
+        end
+    end
+
+    class TokenService
+
+        def initialize(api_key)
+            @api_key = api_key
+            @base_address = 'https://sms.comtele.com.br/api/v2' 
+            @headers = {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',            
+                'auth-key': @api_key
+            }   
+        end
+
+        def send_token(phone_number, prefix)
+            url = @base_address + 'tokenmanager'
+            payload = JSON.generate({'phoneNumber': phone_number, 'prefix': prefix})
+
+            response = RestClient.post(url, payload, @headers)
+            return JSON.parse(response)
+        end
+
+        def send_token_without_prefix(phone_number)
+            url = @base_address + 'tokenmanager'
+            payload = JSON.generate({'phoneNumber': phone_number })
+
+            response = RestClient.post(url, payload, @headers)
+            return JSON.parse(response)
+        end
+
+        def validate_token(token_code)
+            url = @base_address + 'tokenmanager'
+            payload = JSON.generate({'tokenCode': token_code })
+
+            response = RestClient.post(url, payload, @headers)
+            return JSON.parse(response)
+        end
+
+    end
 end
