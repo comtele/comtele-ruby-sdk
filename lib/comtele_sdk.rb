@@ -343,4 +343,47 @@ module ComteleSdk
         end
 
     end
+
+    class ContactMessageService
+
+        def initialize(api_key)
+            @api_key = api_key
+            @base_address = 'https://sms.comtele.com.br/api/v2' 
+            @headers = {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',            
+                'auth-key': @api_key
+            }  
+        end
+    
+        def send(sender, content, group_name)
+            url = @base_address + '/sendcontactmessage'   
+            
+            payload = JSON.generate({
+                'sender': sender,
+                'content': content,
+                'groupName': group_name
+            })
+    
+            response = RestClient.post(url, payload, @headers)
+    
+            return JSON.parse(response)
+        end 
+    
+        def schedule(sender, content, group_name, schedule_date)
+            url = @base_address + '/schedulecontactmessage'   
+            
+            payload = JSON.generate({
+                'sender': sender,
+                'content': content,
+                'scheduleDate': schedule_date,
+                'groupName': group_name
+            })
+    
+            response = RestClient.post(url, payload, @headers)
+    
+            return JSON.parse(response)
+        end 
+
+    end
 end
