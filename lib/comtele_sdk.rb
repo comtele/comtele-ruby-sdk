@@ -259,7 +259,7 @@ module ComteleSdk
         def create_group(group_name, group_description)
             url = @base_address + 'contactgroup'
 
-            payload = JSON.generate({'name': group_name, 'description', group_description})
+            payload = JSON.generate({'name': group_name, 'description': group_description})
             response = RestClient.post(url, payload, @headers)
 
             return JSON.parse(response)
